@@ -60,7 +60,7 @@ class _DoctorUpcomingAppointmentsState
             'Female',
             909),
         'Prescription',
-        DateTime(2021, 03, 20, 10, 30),
+        DateTime(2021, 05, 20, 10, 30),
         '10:30 AM',
         true),
     Appointments(
@@ -80,7 +80,7 @@ class _DoctorUpcomingAppointmentsState
             'Female',
             909),
         'Prescription',
-        DateTime(2021, 03, 20, 10, 30),
+        DateTime(2021, 05, 20, 10, 30),
         '10:30 AM',
         false)
   ];

@@ -4,11 +4,11 @@ import 'package:hospital_management_app/patient/patient_doctor_listing.dart';
 import 'package:hospital_management_app/patient/patient_home_page.dart';
 
 class PatientAppointmentBooking extends StatefulWidget {
-  Doctor d;
-  PatientAppointmentBooking(@required d);
+  final Doctor d;
   @override
   _PatientAppointmentBookingState createState() =>
       _PatientAppointmentBookingState();
+  PatientAppointmentBooking(this.d);
 }
 
 class _PatientAppointmentBookingState extends State<PatientAppointmentBooking> {
@@ -46,6 +46,7 @@ class _PatientAppointmentBookingState extends State<PatientAppointmentBooking> {
 
   @override
   Widget build(BuildContext context) {
+    Doctor d = widget.d;
     return Scaffold(
       appBar: AppBar(
         title: Text('Book Appointment'),
@@ -60,7 +61,7 @@ class _PatientAppointmentBookingState extends State<PatientAppointmentBooking> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'Doctor Id : ${widget.d.id}',
+                  'Doctor Id : ${d.id}',
                   style: GoogleFonts.aBeeZee(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -70,7 +71,7 @@ class _PatientAppointmentBookingState extends State<PatientAppointmentBooking> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'Doctor Name : ${widget.d.name}',
+                  'Doctor Name : ${d.name}',
                   style: GoogleFonts.aBeeZee(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -80,7 +81,7 @@ class _PatientAppointmentBookingState extends State<PatientAppointmentBooking> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'Department: ${widget.d.dept}',
+                  'Department: ${d.dept}',
                   style: GoogleFonts.aBeeZee(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -90,7 +91,7 @@ class _PatientAppointmentBookingState extends State<PatientAppointmentBooking> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'Sex: ${widget.d.sex}',
+                  'Sex: ${d.sex}',
                   style: GoogleFonts.aBeeZee(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,

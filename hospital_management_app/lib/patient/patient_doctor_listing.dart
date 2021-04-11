@@ -18,6 +18,7 @@ class PatientDoctorListing extends StatefulWidget {
 }
 
 class _PatientDoctorListingState extends State<PatientDoctorListing> {
+  //DATA
   List<Doctor> allDoctors = [
     Doctor(
         1234,
@@ -197,7 +198,8 @@ class _PatientDoctorListingState extends State<PatientDoctorListing> {
                                           Navigator.of(context).push(
                                               MaterialPageRoute(
                                                   builder: (c) =>
-                                                      PatientAppointmentBooking()));
+                                                      PatientAppointmentBooking(
+                                                          allDoctors[index])));
                                         },
                                         child: Text(
                                           'Book an Appointment',

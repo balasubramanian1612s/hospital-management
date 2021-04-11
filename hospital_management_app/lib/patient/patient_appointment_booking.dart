@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hospital_management_app/patient/patient_doctor_listing.dart';
 import 'package:hospital_management_app/patient/patient_home_page.dart';
 
 class PatientAppointmentBooking extends StatefulWidget {
+  Doctor d;
+  PatientAppointmentBooking(@required d);
   @override
   _PatientAppointmentBookingState createState() =>
       _PatientAppointmentBookingState();
@@ -57,7 +60,7 @@ class _PatientAppointmentBookingState extends State<PatientAppointmentBooking> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'Doctor Id : 1234',
+                  'Doctor Id : ${widget.d.id}',
                   style: GoogleFonts.aBeeZee(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -67,7 +70,7 @@ class _PatientAppointmentBookingState extends State<PatientAppointmentBooking> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'Doctor Name : stephen',
+                  'Doctor Name : ${widget.d.name}',
                   style: GoogleFonts.aBeeZee(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -77,7 +80,7 @@ class _PatientAppointmentBookingState extends State<PatientAppointmentBooking> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'Department: Surgery',
+                  'Department: ${widget.d.dept}',
                   style: GoogleFonts.aBeeZee(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -87,7 +90,7 @@ class _PatientAppointmentBookingState extends State<PatientAppointmentBooking> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'Sex: Male',
+                  'Sex: ${widget.d.sex}',
                   style: GoogleFonts.aBeeZee(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -212,6 +215,7 @@ class _PatientAppointmentBookingState extends State<PatientAppointmentBooking> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(20))),
                             onPressed: () {
+                              //DATA
                               Navigator.of(context).pushAndRemoveUntil(
                                   MaterialPageRoute(
                                       builder: (context) => PatientHomePage()),

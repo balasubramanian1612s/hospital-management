@@ -6,6 +6,7 @@ import 'package:hospital_management_app/login_page.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:hospital_management_app/patient/patient_home_page.dart';
 
 void main() {
   runApp(MyApp());

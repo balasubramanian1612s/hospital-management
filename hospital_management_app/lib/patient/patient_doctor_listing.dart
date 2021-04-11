@@ -198,7 +198,8 @@ class _PatientDoctorListingState extends State<PatientDoctorListing> {
                                           Navigator.of(context).push(
                                               MaterialPageRoute(
                                                   builder: (c) =>
-                                                      PatientAppointmentBooking()));
+                                                      PatientAppointmentBooking(
+                                                          allDoctors[index])));
                                         },
                                         child: Text(
                                           'Book an Appointment',

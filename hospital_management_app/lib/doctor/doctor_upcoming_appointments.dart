@@ -3,6 +3,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hospital_management_app/patient/patient_appointments_listing.dart';
 import 'package:hospital_management_app/patient/patient_doctor_listing.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
+import 'dart:io';
 
 class Patient {
   final int id;
@@ -22,68 +26,73 @@ class DoctorUpcomingAppointments extends StatefulWidget {
 
 class _DoctorUpcomingAppointmentsState
     extends State<DoctorUpcomingAppointments> {
-  List<Appointments> allAppointments = [
-    Appointments(
-        1,
-        1234,
-        Doctor(
-            1234,
-            'Gayathri Devi',
-            'This is the address of the doctor which will be long.',
-            'Female',
-            'Dental'),
-        2345,
-        Patient(
-            1234,
-            'Bala',
-            'This is the address of the doctor which will be long.',
-            'Female',
-            909),
-        'Prescription',
-        DateTime(2021, 10, 13, 10, 30),
-        '10:30 AM',
-        true),
-    Appointments(
-        2,
-        1234,
-        Doctor(
-            1234,
-            'Gayathri Devi',
-            'This is the address of the doctor which will be long.',
-            'Female',
-            'Dental'),
-        2345,
-        Patient(
-            1234,
-            'Bala',
-            'This is the address of the doctor which will be long.',
-            'Female',
-            909),
-        'Prescription',
-        DateTime(2021, 05, 20, 10, 30),
-        '10:30 AM',
-        true),
-    Appointments(
-        3,
-        1234,
-        Doctor(
-            1234,
-            'Gayathri Devi',
-            'This is the address of the doctor which will be long.',
-            'Female',
-            'Dental'),
-        2345,
-        Patient(
-            1234,
-            'Bala',
-            'This is the address of the doctor which will be long.',
-            'Female',
-            909),
-        'Prescription',
-        DateTime(2021, 05, 20, 10, 30),
-        '10:30 AM',
-        false)
-  ];
+  Database database;
+  int doctorId = 1;
+  List<Appointments> allAppointments = [];
+
+  Future<void> _retrieveAppointments() async {
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    String path = join(documentsDirectory.path, 'myDatabase.db');
+    database = await openDatabase(path);
+    print('Opened database');
+    await _retrieveAppointmentData();
+  }
+
+  Future<void> _updateAppointmentStatus(int appointmentId) async {
+    await database.rawUpdate(
+        'UPDATE APPOINTMENT SET accepted = "true" WHERE appointmentId = $appointmentId');
+    await _retrieveAppointmentData();
+  }
+
+  Future<void> _retrieveAppointmentData() async {
+    List<Map> _retrievedDoctorData =
+        await database.rawQuery('SELECT * FROM DOCTOR');
+    Map<int, Map> _retrievedDoctors = {};
+    _retrievedDoctorData
+        .forEach((doctor) => _retrievedDoctors[doctor['id']] = doctor);
+    List<Map> _retrievedPatientData =
+        await database.rawQuery('SELECT * FROM PATIENT');
+    Map<int, Map> _retrievedPatients = {};
+    _retrievedPatientData
+        .forEach((patient) => _retrievedPatients[patient['id']] = patient);
+    List<Map> _retrievedAppointmentData = await database
+        .rawQuery('SELECT * FROM APPOINTMENT WHERE docId = "$doctorId"');
+    List<Appointments> _retrievedAppointments = _retrievedAppointmentData
+        .map(
+          (appointment) => Appointments(
+            appointment['appointmentId'],
+            appointment['docId'],
+            Doctor(
+                _retrievedDoctors[appointment['docId']]['id'],
+                _retrievedDoctors[appointment['docId']]['name'],
+                _retrievedDoctors[appointment['docId']]['address'],
+                _retrievedDoctors[appointment['docId']]['sex'],
+                _retrievedDoctors[appointment['docId']]['dept']),
+            appointment['patientId'],
+            Patient(
+                _retrievedPatients[appointment['patientId']]['id'],
+                _retrievedPatients[appointment['patientId']]['name'],
+                _retrievedPatients[appointment['patientId']]['address'],
+                _retrievedPatients[appointment['patientId']]['sex'],
+                _retrievedPatients[appointment['patientId']]['phNo']),
+            appointment['prescription'],
+            DateTime.parse(appointment['date']),
+            appointment['time'],
+            appointment['accepted'] == 'true',
+          ),
+        )
+        .toList();
+    setState(() {
+      allAppointments = _retrievedAppointments;
+    });
+  }
+
+  @override
+  void initState() {
+    _retrieveAppointments();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Appointments> allUpcomingAppointments = allAppointments
@@ -413,7 +422,10 @@ class _DoctorUpcomingAppointmentsState
                                       shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(20))),
-                                      onPressed: () {
+                                      onPressed: () async {
+                                        await _updateAppointmentStatus(
+                                            allUnacceptedAppointments[index]
+                                                .appointmentId);
                                         // Navigator.of(context).push(
                                         //     MaterialPageRoute(
                                         //         builder: (c) =>

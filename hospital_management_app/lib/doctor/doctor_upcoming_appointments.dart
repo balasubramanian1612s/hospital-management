@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hospital_management_app/patient/patient_appointments_listing.dart';
 import 'package:hospital_management_app/patient/patient_doctor_listing.dart';
+import 'package:hospital_management_app/patient/patient_prescription_page.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -263,10 +264,12 @@ class _DoctorUpcomingAppointmentsState
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(20))),
                                       onPressed: () {
-                                        // Navigator.of(context).push(
-                                        //     MaterialPageRoute(
-                                        //         builder: (c) =>
-                                        //             PatientPrescriptionPage()));
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (c) =>
+                                                    PatientPrescriptionPage(
+                                                        allUpcomingAppointments[
+                                                            index])));
                                       },
                                       child: Text(
                                         'Edit Prescription',

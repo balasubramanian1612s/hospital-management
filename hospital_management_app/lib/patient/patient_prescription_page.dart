@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hospital_management_app/doctor/doctor_upcoming_appointments.dart';
+import 'package:hospital_management_app/patient/patient_appointments_listing.dart';
 import 'package:intl/intl.dart';
 
 class PatientPrescriptionPage extends StatefulWidget {
+  Appointments ap;
+  PatientPrescriptionPage(this.ap);
   @override
   _PatientPrescriptionPageState createState() =>
       _PatientPrescriptionPageState();
@@ -60,26 +64,19 @@ class _PatientPrescriptionPageState extends State<PatientPrescriptionPage> {
                           children: [
                             Text(
                               // allCompletedAppointments[index].dept,
-                              'Department',
+                              widget.ap.patient.name,
                               style: GoogleFonts.aBeeZee(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                   color: Color(0xff1c1427)),
                             ),
-                            Text(
-                              // allCompletedAppointments[index].name,
-                              'Name',
-                              style: GoogleFonts.aBeeZee(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xff1c1427)),
-                            ),
+
                             // SizedBox(
                             //   height: 10,
                             // ),
                             Text(
                               // allCompletedAppointments[index].time,
-                              '2 : 00 AM',
+                              widget.ap.time,
                               style: GoogleFonts.aBeeZee(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
@@ -91,7 +88,7 @@ class _PatientPrescriptionPageState extends State<PatientPrescriptionPage> {
                               //         allCompletedAppointments[index]
                               //             .date)
                               //     .toString(),
-                              'Tuesday 13 march 2021',
+                              widget.ap.date.toString(),
                               style: GoogleFonts.aBeeZee(
                                   fontSize: 17,
                                   fontWeight: FontWeight.bold,
@@ -102,7 +99,7 @@ class _PatientPrescriptionPageState extends State<PatientPrescriptionPage> {
                             // ),
                             Text(
                               // 'Doctor Id: ${allCompletedAppointments[index].id}',
-                              'Doctor Id: 1234',
+                              'Patient Id: ${widget.ap.patient.id}',
                               style: GoogleFonts.aBeeZee(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w500,
@@ -186,7 +183,7 @@ class _PatientPrescriptionPageState extends State<PatientPrescriptionPage> {
                         height: 20,
                       ),
                       Text(
-                        'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum',
+                        widget.ap.prescription,
                         style: GoogleFonts.aBeeZee(
                             fontSize: 15,
                             // fontWeight: FontWeight.bold,

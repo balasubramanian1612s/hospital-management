@@ -1,6 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hospital_management_app/patient/patient_appointment_booking.dart';
+import 'package:hospital_management_app/main.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
 
 class Doctor {
   final int id;
@@ -18,27 +24,40 @@ class PatientDoctorListing extends StatefulWidget {
 }
 
 class _PatientDoctorListingState extends State<PatientDoctorListing> {
+  Database database;
+
   //DATA
-  List<Doctor> allDoctors = [
-    Doctor(
-        1234,
-        'Gayathri Devi',
-        'This is the address of the doctor which will be long.',
-        'Female',
-        'Dental'),
-    Doctor(
-        1234,
-        'Gayathri Devi',
-        'This is the address of the doctor which will be long.',
-        'Female',
-        'Dental'),
-    Doctor(
-        1234,
-        'Gayathri Devi',
-        'This is the address of the doctor which will be long.',
-        'Female',
-        'Dental'),
-  ];
+  List<Doctor> allDoctors = [];
+
+  void retrieveDoctors() async {
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    String path = join(documentsDirectory.path, 'myDatabase.db');
+    database = await openDatabase(path);
+    print('Opened database');
+    List<Doctor> _retrievedDoctors = [];
+    List<Map> _retrievedData = await database.rawQuery('SELECT * FROM DOCTOR');
+    _retrievedDoctors = _retrievedData
+        .map((doctor) => Doctor(doctor['id'], doctor['name'], doctor['address'],
+            doctor['sex'], doctor['dept']))
+        .toList();
+    setState(() {
+      allDoctors = _retrievedDoctors;
+    });
+  }
+
+  @override
+  void initState() {
+    retrieveDoctors();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    database.close();
+    print("Closed database");
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return allDoctors.isEmpty

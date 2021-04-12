@@ -467,7 +467,9 @@ class _PatientAppointmentsListingState
                                         Navigator.of(context).push(
                                             MaterialPageRoute(
                                                 builder: (c) =>
-                                                    PatientPrescriptionPage()));
+                                                    PatientPrescriptionPage(
+                                                        allCompletedAppointments[
+                                                            index])));
                                       },
                                       child: Text(
                                         'View Prescription',

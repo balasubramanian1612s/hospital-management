@@ -247,7 +247,7 @@ class _PatientAppointmentBookingState extends State<PatientAppointmentBooking> {
                               //DATA
                               await _addAppointment(
                                   widget.d.id,
-                                  2,
+                                  1,
                                   'none',
                                   selectedDate,
                                   selectedTime.format(context),

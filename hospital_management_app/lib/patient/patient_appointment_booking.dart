@@ -1,7 +1,14 @@
+import 'dart:io';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hospital_management_app/patient/patient_doctor_listing.dart';
 import 'package:hospital_management_app/patient/patient_home_page.dart';
+import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
 
 class PatientAppointmentBooking extends StatefulWidget {
   final Doctor d;
@@ -14,6 +21,8 @@ class PatientAppointmentBooking extends StatefulWidget {
 class _PatientAppointmentBookingState extends State<PatientAppointmentBooking> {
   DateTime selectedDate;
   TimeOfDay selectedTime;
+  Doctor selectedDoctor;
+  Database database;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
@@ -44,6 +53,25 @@ class _PatientAppointmentBookingState extends State<PatientAppointmentBooking> {
       });
   }
 
+  Future<void> _addAppointment(int docId, int patientId, String prescription,
+      DateTime date, String time, String accepted) async {
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    String path = join(documentsDirectory.path, 'myDatabase.db');
+    database = await openDatabase(path);
+    print('Opened appointments database');
+    String formattedDate = DateFormat('yyyy-MM-dd').format(date);
+    var ran = Random();
+    String appointmentId = '${ran.nextInt(100)}';
+    await database.transaction((txn) async {
+      int id = await txn.rawInsert(
+          'INSERT INTO APPOINTMENT(appointmentId,docId,patientId,prescription,date,time,accepted) VALUES($appointmentId,$docId,$patientId,"$prescription","$formattedDate","$time","$accepted")');
+
+      print('inserted $id');
+    });
+    List<Map> list = await database.rawQuery('SELECT * FROM APPOINTMENT');
+    print(list);
+  }
+
   @override
   Widget build(BuildContext context) {
     Doctor d = widget.d;
@@ -61,7 +89,7 @@ class _PatientAppointmentBookingState extends State<PatientAppointmentBooking> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'Doctor Id : ${d.id}',
+                  'Doctor Id :  ${widget.d.id}',
                   style: GoogleFonts.aBeeZee(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -215,8 +243,15 @@ class _PatientAppointmentBookingState extends State<PatientAppointmentBooking> {
                             shape: RoundedRectangleBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(20))),
-                            onPressed: () {
+                            onPressed: () async {
                               //DATA
+                              await _addAppointment(
+                                  widget.d.id,
+                                  1,
+                                  'none',
+                                  selectedDate,
+                                  selectedTime.format(context),
+                                  'false');
                               Navigator.of(context).pushAndRemoveUntil(
                                   MaterialPageRoute(
                                       builder: (context) => PatientHomePage()),

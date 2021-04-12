@@ -40,7 +40,7 @@ class _DoctorUpcomingAppointmentsState
             'Female',
             909),
         'Prescription',
-        DateTime(2020, 03, 13, 10, 30),
+        DateTime(2021, 10, 13, 10, 30),
         '10:30 AM',
         true),
     Appointments(
@@ -87,8 +87,14 @@ class _DoctorUpcomingAppointmentsState
   @override
   Widget build(BuildContext context) {
     List<Appointments> allUpcomingAppointments = allAppointments
-        .where((element) => element.date.isAfter(DateTime.now()))
+        .where((element) =>
+            element.date.isAfter(DateTime.now()) && element.accepted == true)
         .toList();
+    List<Appointments> allUnacceptedAppointments = allAppointments
+        .where((element) =>
+            element.date.isAfter(DateTime.now()) && element.accepted == false)
+        .toList();
+
     return allAppointments.isEmpty
         ? Center(
             child: Text(
@@ -99,151 +105,343 @@ class _DoctorUpcomingAppointmentsState
                   color: Color(0xff1c1427)),
             ),
           )
-        : allUpcomingAppointments.isEmpty
-            ? Center(
-                child: Text(
-                  'You have NO Appointments history',
-                  style: GoogleFonts.aBeeZee(
-                      fontSize: 18,
-                      // fontWeight: FontWeight.,
-                      color: Color(0xff1c1427)),
-                ),
-              )
-            : ListView.builder(
-                shrinkWrap: true,
-                itemCount: allUpcomingAppointments.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(10),
-                                topRight: Radius.circular(10),
-                                bottomLeft: Radius.circular(10),
-                                bottomRight: Radius.circular(10)),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Color(0xff1c1427).withOpacity(0.5),
-                                spreadRadius: 5,
-                                blurRadius: 7,
-                                offset:
-                                    Offset(0, 3), // changes position of shadow
-                              ),
-                            ]),
-                        width: 1000,
-                        constraints:
-                            BoxConstraints(minWidth: 100, maxWidth: 1000),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Wrap(
-                            alignment: WrapAlignment.center,
-                            crossAxisAlignment: WrapCrossAlignment.center,
-                            direction: Axis.horizontal,
-                            children: [
-                              Icon(
-                                Icons.verified_user,
-                                size: 100,
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      allUpcomingAppointments[index]
-                                          .patient
-                                          .name,
-                                      style: GoogleFonts.aBeeZee(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                          color: Color(0xff1c1427)),
-                                    ),
-                                    Text(
-                                      'Patient Id: ${allUpcomingAppointments[index].patient.id}',
-                                      style: GoogleFonts.aBeeZee(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold,
-                                          color: Color(0xff1c1427)),
-                                    ),
-                                    // SizedBox(
-                                    //   height: 10,
-                                    // ),
-                                    Text(
-                                      allUpcomingAppointments[index].time,
-                                      style: GoogleFonts.aBeeZee(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: Color(0xff1c1427)),
-                                    ),
-                                    Text(
-                                      DateFormat.yMMMMEEEEd()
-                                          .format(allUpcomingAppointments[index]
-                                              .date)
-                                          .toString(),
-                                      style: GoogleFonts.aBeeZee(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.bold,
-                                          color: Color(0xff1c1427)),
-                                    ),
-                                    // SizedBox(
-                                    //   height: 10,
-                                    // ),
-                                    Text(
-                                      'Contact: ${allUpcomingAppointments[index].patient.phNo}',
-                                      style: GoogleFonts.aBeeZee(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w500,
-                                          color: Color(0xff1c1427)),
-                                    ),
-                                  ],
+        : _buildMainWidget();
+  }
+
+  _buildMainWidget() {
+    List<Appointments> allUpcomingAppointments = allAppointments
+        .where((element) =>
+            element.date.isAfter(DateTime.now()) && element.accepted == true)
+        .toList();
+    List<Appointments> allUnacceptedAppointments = allAppointments
+        .where((element) =>
+            element.date.isAfter(DateTime.now()) && element.accepted == false)
+        .toList();
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Center(
+              child: Text(
+                'Upcoming Appointments',
+                style: GoogleFonts.aBeeZee(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xff1c1427)),
+              ),
+            ),
+          ),
+          allUpcomingAppointments.isEmpty
+              ? Center(
+                  child: Text(
+                    'You have NO Upcoming Appointments',
+                    style: GoogleFonts.aBeeZee(
+                        fontSize: 18,
+                        // fontWeight: FontWeight.,
+                        color: Color(0xff1c1427)),
+                  ),
+                )
+              : ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: allUpcomingAppointments.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(10),
+                                  topRight: Radius.circular(10),
+                                  bottomLeft: Radius.circular(10),
+                                  bottomRight: Radius.circular(10)),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color(0xff1c1427).withOpacity(0.5),
+                                  spreadRadius: 5,
+                                  blurRadius: 7,
+                                  offset: Offset(
+                                      0, 3), // changes position of shadow
                                 ),
-                              ),
-                              // Expanded(child: Container()),
-                              SizedBox(
-                                width: 40,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: SizedBox(
-                                  height: 40,
-                                  width: 200,
-                                  child: RaisedButton(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(20))),
-                                    onPressed: () {
-                                      // Navigator.of(context).push(
-                                      //     MaterialPageRoute(
-                                      //         builder: (c) =>
-                                      //             PatientPrescriptionPage()));
-                                    },
-                                    child: Text(
-                                      'Edit Prescription',
-                                      style: GoogleFonts.aBeeZee(
-                                          // fontSize: 30,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white),
-                                    ),
-                                    color: Color(0xff1c1427),
+                              ]),
+                          width: 1000,
+                          constraints:
+                              BoxConstraints(minWidth: 100, maxWidth: 1000),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Wrap(
+                              alignment: WrapAlignment.center,
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              direction: Axis.horizontal,
+                              children: [
+                                Icon(
+                                  Icons.verified_user,
+                                  size: 100,
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        allUpcomingAppointments[index]
+                                            .patient
+                                            .name,
+                                        style: GoogleFonts.aBeeZee(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                            color: Color(0xff1c1427)),
+                                      ),
+                                      Text(
+                                        'Patient Id: ${allUpcomingAppointments[index].patient.id}',
+                                        style: GoogleFonts.aBeeZee(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold,
+                                            color: Color(0xff1c1427)),
+                                      ),
+                                      // SizedBox(
+                                      //   height: 10,
+                                      // ),
+                                      Text(
+                                        allUpcomingAppointments[index].time,
+                                        style: GoogleFonts.aBeeZee(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: Color(0xff1c1427)),
+                                      ),
+                                      Text(
+                                        DateFormat.yMMMMEEEEd()
+                                            .format(
+                                                allUpcomingAppointments[index]
+                                                    .date)
+                                            .toString(),
+                                        style: GoogleFonts.aBeeZee(
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.bold,
+                                            color: Color(0xff1c1427)),
+                                      ),
+                                      // SizedBox(
+                                      //   height: 10,
+                                      // ),
+                                      Text(
+                                        'Contact: ${allUpcomingAppointments[index].patient.phNo}',
+                                        style: GoogleFonts.aBeeZee(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500,
+                                            color: Color(0xff1c1427)),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ),
-                              SizedBox(
-                                width: 40,
-                              ),
-                            ],
+                                // Expanded(child: Container()),
+                                SizedBox(
+                                  width: 40,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: SizedBox(
+                                    height: 40,
+                                    width: 200,
+                                    child: RaisedButton(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(20))),
+                                      onPressed: () {
+                                        // Navigator.of(context).push(
+                                        //     MaterialPageRoute(
+                                        //         builder: (c) =>
+                                        //             PatientPrescriptionPage()));
+                                      },
+                                      child: Text(
+                                        'Edit Prescription',
+                                        style: GoogleFonts.aBeeZee(
+                                            // fontSize: 30,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                      ),
+                                      color: Color(0xff1c1427),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 40,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                });
+                    );
+                  }),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Center(
+              child: Text(
+                'Pending for Approval',
+                style: GoogleFonts.aBeeZee(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xff1c1427)),
+              ),
+            ),
+          ),
+          allUnacceptedAppointments.isEmpty
+              ? Center(
+                  child: Text(
+                    'You have NO Appointments history',
+                    style: GoogleFonts.aBeeZee(
+                        fontSize: 18,
+                        // fontWeight: FontWeight.,
+                        color: Color(0xff1c1427)),
+                  ),
+                )
+              : ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: allUnacceptedAppointments.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(10),
+                                  topRight: Radius.circular(10),
+                                  bottomLeft: Radius.circular(10),
+                                  bottomRight: Radius.circular(10)),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color(0xff1c1427).withOpacity(0.5),
+                                  spreadRadius: 5,
+                                  blurRadius: 7,
+                                  offset: Offset(
+                                      0, 3), // changes position of shadow
+                                ),
+                              ]),
+                          width: 1000,
+                          constraints:
+                              BoxConstraints(minWidth: 100, maxWidth: 1000),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Wrap(
+                              alignment: WrapAlignment.center,
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              direction: Axis.horizontal,
+                              children: [
+                                Icon(
+                                  Icons.verified_user,
+                                  size: 100,
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        allUnacceptedAppointments[index]
+                                            .patient
+                                            .name,
+                                        style: GoogleFonts.aBeeZee(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                            color: Color(0xff1c1427)),
+                                      ),
+                                      Text(
+                                        'Patient Id: ${allUnacceptedAppointments[index].patient.id}',
+                                        style: GoogleFonts.aBeeZee(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold,
+                                            color: Color(0xff1c1427)),
+                                      ),
+                                      // SizedBox(
+                                      //   height: 10,
+                                      // ),
+                                      Text(
+                                        allUnacceptedAppointments[index].time,
+                                        style: GoogleFonts.aBeeZee(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: Color(0xff1c1427)),
+                                      ),
+                                      Text(
+                                        DateFormat.yMMMMEEEEd()
+                                            .format(
+                                                allUnacceptedAppointments[index]
+                                                    .date)
+                                            .toString(),
+                                        style: GoogleFonts.aBeeZee(
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.bold,
+                                            color: Color(0xff1c1427)),
+                                      ),
+                                      // SizedBox(
+                                      //   height: 10,
+                                      // ),
+                                      Text(
+                                        'Contact: ${allUnacceptedAppointments[index].patient.phNo}',
+                                        style: GoogleFonts.aBeeZee(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500,
+                                            color: Color(0xff1c1427)),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                // Expanded(child: Container()),
+                                SizedBox(
+                                  width: 40,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: SizedBox(
+                                    height: 40,
+                                    width: 200,
+                                    child: RaisedButton(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(20))),
+                                      onPressed: () {
+                                        // Navigator.of(context).push(
+                                        //     MaterialPageRoute(
+                                        //         builder: (c) =>
+                                        //             PatientPrescriptionPage()));
+                                      },
+                                      child: Text(
+                                        'Accept Appointment',
+                                        style: GoogleFonts.aBeeZee(
+                                            // fontSize: 30,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                      ),
+                                      color: Color(0xff1c1427),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 40,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
+        ],
+      ),
+    );
   }
 }
